@@ -6,16 +6,6 @@ generate_data <- function(n,p){
   return(list(covariates = matrix(rnorm(n*p,mean=0,sd=1), nrow = n, ncol=p)), responses = rnorm(n,mean=0,sd=1))
 }
 
-Write a function `model_select(covariates, responses,
-                               cutoff)` which fits the linear regression `responses ~ covariates`
-and retains only those covariates whose coefficient p-values are
-less than or equal to `cutoff`. Then fit another regression using
-only the retained covariates and return the p-values from this
-reduced model. If there are no retained covariates return an empty
-vector. *HINT*: You can use indexing inside of formulas:
-  `lm(responses ~ covariates[, c(1, 2)])` will fit a regression with
-only the first two covariates.
-
 model_select <- function(covariates, responses,
                          cutoff){
   within.cutoff <- coef(lm(response~covariates)) <= cutoff
@@ -26,3 +16,16 @@ model_select <- function(covariates, responses,
   } 
   return(the.p.vals)
 }
+
+run_simulation<- function(n_trials, n, p, cutoff){
+    x = generate_data(n,p)
+    p.vals = model_select(x$covariates, x$responses,cutoff)
+    save(p.vals, "p_values.Rdata")
+}
+
+make_plot <-function(datapath){
+  plot(readLines(datapath))
+}
+
+
+
